@@ -1,14 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <cstring>
 using namespace std;
 
 int n, maxCnt, minLen;
 int dr[4]{ -1,1,0,0 };
 int dc[4]{ 0,0,-1,1 };
 int graph[13][13]{ 0 };
-bool used[13][13]{ false };
 vector<pair<int, int>> core;
 
 int connect(int r, int c, int dir) {
@@ -21,7 +19,7 @@ int connect(int r, int c, int dir) {
 		nc += dc[dir];
 
 		// 다른 Core 혹은 설치된 전선
-		if (graph[nr][nc] == 1 || used[nr][nc]) return -1;
+		if (graph[nr][nc] != 0) return -1;
 
 		length++;
 
@@ -41,11 +39,14 @@ void dfs(int idx, int cnt, int len) {
 		return;
 	}
 
+	// 가지치기
+	// 남은 Core를 전부 연결해도 maxCnt 넘을 수 없음
+	if (cnt + (core.size() - idx) < maxCnt) return;
+
 	int cr = core[idx].first;
 	int cc = core[idx].second;
 
 	for (int dir = 0; dir < 4; dir++) {
-		// 연결 시도
 		int length = connect(cr, cc, dir);
 
 		if (length == -1) continue;
@@ -56,7 +57,7 @@ void dfs(int idx, int cnt, int len) {
 		for (int i = 0; i < length; i++) {
 			nr += dr[dir];
 			nc += dc[dir];
-			used[nr][nc] = true;
+			graph[nr][nc] = 2;
 		}
 
 		dfs(idx + 1, cnt + 1, len + length);
@@ -67,7 +68,7 @@ void dfs(int idx, int cnt, int len) {
 		for (int i = 0; i < length; i++) {
 			nr += dr[dir];
 			nc += dc[dir];
-			used[nr][nc] = false;
+			graph[nr][nc] = 0;
 		}
 	}
 
@@ -85,7 +86,6 @@ int main() {
 	for (int tc = 1; tc <= t; tc++) {
 		maxCnt = 0;
 		minLen = 1e9;
-		memset(used, false, sizeof(used));
 		core.clear();
 
 		cin >> n;
