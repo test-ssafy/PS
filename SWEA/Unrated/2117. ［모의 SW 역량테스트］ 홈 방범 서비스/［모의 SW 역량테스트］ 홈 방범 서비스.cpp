@@ -1,49 +1,53 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <cmath>
 using namespace std;
 
-int n, m;
-int v[20][20]{ 0 };
-
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
 
-    int t;
-    cin >> t;
+	int t;
+	cin >> t;
 
-    for (int tc = 1; tc <= t; tc++) {
+	for (int tc = 1; tc <= t; tc++) {
+		int n, m;
+		cin >> n >> m;
 
-        cin >> n >> m;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) cin >> v[i][j];
-        }
+		vector<pair<int, int>> house;
+		int ans = 0;
 
-        int ans = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				int x;
+				cin >> x;
 
-        for (int r = 0; r < n; r++) {
-            for (int c = 0; c < n; c++) {
+				if (x == 1) house.push_back({ i, j });
+			}
+		}
 
-                for (int k = 1; k <= 2 * n - 1; k++) {
-                    int cnt = 0;
+		for (int r = 0; r < n; r++) {
+			for (int c = 0; c < n; c++) {
 
-                    for (int i = 0; i < n; i++) {
-                        for (int j = 0; j < n; j++) {
-                            if (v[i][j] == 1 && abs(r - i) + abs(c - j) < k) cnt++;
-                        }
-                    }
+				int cnt[41]{ 0 };
 
-                    int cost = k * k + (k - 1) * (k - 1);
+				for (const auto& h : house) {
+					int dist = abs(r - h.first) + abs(c - h.second);
+					cnt[dist + 1]++;
+				}
 
-                    if (cnt * m >= cost) ans = max(ans, cnt);
-                }
-            }
-        }
+				for (int k = 1; k < 41; k++) {
+					cnt[k] += cnt[k - 1];
 
-        cout << "#" << tc << " " << ans << '\n';
-    }
+					int cost = k * k + (k - 1) * (k - 1);
 
-    return 0;
+					if (cnt[k] * m >= cost) ans = max(ans, cnt[k]);
+				}
+			}
+		}
+
+		cout << "#" << tc << " " << ans << '\n';
+	}
+
+	return 0;
 }
