@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+#include <deque>
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+
+	for (int tc = 1; tc <= t; tc++) {
+		deque<string> deq1;
+		deque<string> deq2;
+		deque<string> ans;
+
+		int n;
+		cin >> n;
+		for (int i = 0; i < n; i++) {
+			string str;
+			cin >> str;
+			if (i < n / 2) deq1.push_back(str);
+			else deq2.push_back(str);
+		}
+
+		if (n % 2 == 1) {
+			deq2.push_back(deq2.front());
+			deq2.pop_front();
+		}
+		
+		while (!deq1.empty()) {
+			ans.push_back(deq1.front());
+			ans.push_back(deq2.front());
+			deq1.pop_front();
+			deq2.pop_front();
+		}
+
+		if (!deq2.empty()) ans.push_back(deq2.front());
+		
+		cout << "#" << tc << " ";
+		while (!ans.empty()) {
+			cout << ans.front() << " ";
+			ans.pop_front();
+		}
+		cout << "\n";
+	}
+	
+	return 0;
+}
