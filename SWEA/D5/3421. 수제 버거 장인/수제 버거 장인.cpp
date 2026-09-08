@@ -2,6 +2,21 @@
 using namespace std;
 
 int n, m;
+int conflict[21];
+int ans;
+
+void dfs(int idx, int mask) {
+	if (idx == n) {
+		ans++;
+		return;
+	}
+
+	// idx를 선택할 수 있는 경우
+	if ((conflict[idx] & mask) == 0) dfs(idx + 1, mask | (1 << idx));
+	
+	// idx를 선택하지 않는 경우
+	dfs(idx + 1, mask);
+}
 
 int main() {
 	ios_base::sync_with_stdio(0);
@@ -13,32 +28,21 @@ int main() {
 	for (int tc = 1; tc <= t; tc++) {
 		cin >> n >> m;
 
-		int conflict[21]{ 0 };
+		for (int i = 0; i < n; i++) conflict[i] = 0;
+
 		for (int i = 0; i < m; i++) {
 			int a, b;
 			cin >> a >> b;
 			a--; b--;
+
 			conflict[a] |= (1 << b);
 			conflict[b] |= (1 << a);
 		}
 
-		int ans = 0;
+		ans = 0;
 
-		for (int mask = 0; mask < (1 << n); mask++) {
-			bool valid = true;
+		dfs(0, 0);
 
-			for (int i = 0; i < n; i++) {
-				if (mask & (1 << i)) {
-					if (conflict[i] & mask) {
-						valid = false;
-						break;
-					}
-				}
-			}
-
-			if (valid) ans++;
-		}
- 
 		cout << "#" << tc << " " << ans << "\n";
 	}
 
