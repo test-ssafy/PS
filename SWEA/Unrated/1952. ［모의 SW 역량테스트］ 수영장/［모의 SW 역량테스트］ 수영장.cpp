@@ -2,23 +2,9 @@
 #include <algorithm>
 using namespace std;
 
-int ans;
-int price[4]{ 0 };
-int month[13]{ 0 };
-
-void dfs(int idx, int sum) {
-	if (idx >= 13) {
-		ans = min(ans, sum);
-		return;
-	}
-
-	dfs(idx + 3, sum + price[2]);
-
-	dfs(idx + 1, sum + price[1]);
-
-	dfs(idx + 1, sum + price[0] * month[idx]);
-}
-
+int price[4];
+int month[13];
+int dp[13];
 
 int main() {
 	ios_base::sync_with_stdio(0);
@@ -31,9 +17,20 @@ int main() {
 		for (int i = 0; i < 4; i++) cin >> price[i];
 		for (int i = 1; i <= 12; i++) cin >> month[i];
 
-		ans = price[3];
+		dp[0] = 0;
 
-		dfs(0, 0);
+		for (int i = 1; i <= 12; i++) {
+			// 1일
+			dp[i] = dp[i - 1] + month[i] * price[0];
+
+			// 1달
+			dp[i] = min(dp[i], dp[i - 1] + price[1]);
+
+			// 3달
+			if (i >= 3) dp[i] = min(dp[i], dp[i - 3] + price[2]);
+		}
+
+		int ans = min(dp[12], price[3]);
 
 		cout << "#" << tc << " " << ans << "\n";
 	}
