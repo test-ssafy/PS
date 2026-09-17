@@ -2,16 +2,14 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <cstring>
 using namespace std;
 
 int r, c, ans;
-vector<string> v;
+int v[20][20]{ 0 };
 int dr[4]{ -1,1,0,0 };
 int dc[4]{ 0,0,-1,1 };
-bool used[27]{ false };
 
-void dfs(int curR, int curC, int cnt) {
+void dfs(int curR, int curC, int cnt, int mask) {
 	ans = max(ans, cnt);
 
 	for (int dir = 0; dir < 4; dir++) {
@@ -20,11 +18,10 @@ void dfs(int curR, int curC, int cnt) {
 
 		if (nr < 0 || nc < 0 || nr >= r || nc >= c) continue;
 
-		if (used[v[nr][nc] - 'A']) continue;
+		int bit = 1 << v[nr][nc];
+		if (mask & bit) continue;
 
-		used[v[nr][nc] - 'A'] = true;
-		dfs(nr, nc, cnt + 1);
-		used[v[nr][nc] - 'A'] = false;
+		dfs(nr, nc, cnt + 1, mask | bit);
 	}
 }
 
@@ -36,14 +33,16 @@ int main() {
 	cin >> t;
 	
 	for (int tc = 1; tc <= t; tc++) {
-		memset(used, false, sizeof(used));
 		ans = 0;
 		cin >> r >> c;
-		v.resize(r);
-		for (int i = 0; i < r; i++) cin >> v[i];
+		
+		for (int i = 0; i < r; i++) {
+			string str;
+			cin >> str;
+			for (int j = 0; j < c; j++) v[i][j] = str[j] - 'A';
+		}
 
-		used[v[0][0] - 'A'] = true;
-		dfs(0, 0, 1);
+		dfs(0, 0, 1, 1 << v[0][0]);
 
 		cout << "#" << tc << " " << ans << "\n";
 	}
