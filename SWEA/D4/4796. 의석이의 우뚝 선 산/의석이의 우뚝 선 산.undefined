@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#define ll long long
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+	for (int tc = 1; tc <= t; tc++) {
+		int n;
+		cin >> n;
+
+		vector<ll> v(n, 0);
+		for (int i = 0; i < n; i++) cin >> v[i];
+		
+		// i를 끝으로 하는 연속 증가 구간의 시작 위치
+		vector<int> increase(n);
+		increase[0] = 0;
+		for (int i = 1; i < n; i++) {
+			if (v[i - 1] < v[i]) increase[i] = increase[i - 1];
+			else increase[i] = i;
+		}
+
+		// i를 시작으로 하는 연속 감소 구간의 끝 위치
+		vector<int> decrease(n);
+		decrease[n - 1] = n - 1;
+		for (int i = n - 2; i >= 0; i--) {
+			if (v[i] > v[i + 1]) decrease[i] = decrease[i + 1];
+			else decrease[i] = i;
+		}
+
+		ll ans = 0;
+
+		for (int k = 1; k < n - 1; k++) {
+			ll left = k - increase[k];
+			ll right = decrease[k] - k;
+
+			ans += left * right;
+		}
+
+		cout << "#" << tc << " " << ans << "\n";
+	}
+
+	return 0;
+}
