@@ -12,14 +12,12 @@ int dc[4]{ 0,0,-1,1 };
 void dfs(int curR, int curC, int cnt, int mask) {
 	ans = max(ans, cnt);
 
-	if (cnt == 26) return;
-
 	for (int dir = 0; dir < 4; dir++) {
 		int nr = curR + dr[dir];
 		int nc = curC + dc[dir];
 
 		if (nr < 0 || nc < 0 || nr >= r || nc >= c) continue;
-
+		if (cnt + 26 - __builtin_popcount(mask) <= ans) return;
 		int bit = 1 << v[nr][nc];
 		if (mask & bit) continue;
 
