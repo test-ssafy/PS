@@ -12,6 +12,8 @@ int dc[4]{ 0,0,-1,1 };
 void dfs(int curR, int curC, int cnt, int mask) {
 	ans = max(ans, cnt);
 
+	if (cnt == 26) return;
+
 	for (int dir = 0; dir < 4; dir++) {
 		int nr = curR + dr[dir];
 		int nc = curC + dc[dir];
