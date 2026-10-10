@@ -41,7 +41,6 @@ int main() {
             int r = turtles[id].r;
             int c = turtles[id].c;
 
-            // BFS로 n-1, n-1 시작
             queue<pair<int, int>> q;
             q.push({ n - 1, n - 1 });
             vector<vector<int>> turtleMap(n, vector<int>(n, -1));
@@ -102,13 +101,11 @@ int main() {
         }
 
         // Step2
-        for (Volcano &v : volcanoes) v.curP += 10;
+        for (Volcano& v : volcanoes) v.curP += 10;
 
         // Step3
-        // 열기 발생한 칸들 합 관리할 배열
         vector<vector<int>> sumFire(n, vector<int>(n, 0));
         vector<bool> fired(k, false);
-        // fireQ에는 idx로 관리
         queue<int> fireQ;
 
         // Step 3.1
@@ -165,7 +162,7 @@ int main() {
         }
 
         // Step 3.3
-        for (Turtle &t : turtles) { 
+        for (Turtle& t : turtles) {
             if (t.state > 0) continue;
 
             if (sumFire[t.r][t.c] >= 20) {
