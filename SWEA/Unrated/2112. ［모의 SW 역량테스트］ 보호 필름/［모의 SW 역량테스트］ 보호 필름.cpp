@@ -33,6 +33,7 @@ bool check() {
 }
 
 void dfs(int r, int curCnt, int cnt) {
+	if (isEnd) return;
 
 	if (curCnt > cnt) return;
 
