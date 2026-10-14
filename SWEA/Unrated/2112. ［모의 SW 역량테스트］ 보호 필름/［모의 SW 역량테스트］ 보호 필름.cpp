@@ -62,6 +62,7 @@ int main() {
 
 	cin >> t;
 	for (int tc = 1; tc <= t; tc++) {
+
 		isEnd = false;
 
 		cin >> d >> w >> k;
@@ -71,16 +72,18 @@ int main() {
 			for (int j = 0; j < w; j++) cin >> v[i][j];
 		}
 
-		int ans = 0;
-		for (int i = 0; i <= d; i++) {
-			dfs(0, 0, i);
+		int l = 0, r = d;
+		while (l <= r) {
+			int mid = (l + r) / 2;
 
-			if (isEnd) {
-				ans = i;
-				break;
-			}
+			isEnd = false;
+
+			dfs(0, 0, mid);
+
+			if (isEnd) r = mid - 1;
+			else l = mid + 1;
 		}
 
-		cout << "#" << tc << " " << ans << "\n";
+		cout << "#" << tc << " " << l << "\n";
 	}
 }
