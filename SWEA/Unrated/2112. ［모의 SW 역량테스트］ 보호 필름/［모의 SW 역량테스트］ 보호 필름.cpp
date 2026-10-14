@@ -1,11 +1,10 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
 using namespace std;
 
 int t, d, w, k;
-vector<vector<int>> v;
-vector<int> changed;
+int v[13][20];
+int changed[13];
 
 bool isEnd;
 
@@ -67,9 +66,8 @@ int main() {
 		isEnd = false;
 
 		cin >> d >> w >> k;
-		v.assign(d, vector<int>(w, 0));
-		changed.assign(d, -1);
 		for (int i = 0; i < d; i++) {
+			changed[i] = -1;
 			for (int j = 0; j < w; j++) cin >> v[i][j];
 		}
 
