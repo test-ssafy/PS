@@ -1,22 +1,17 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
 #include <queue>
 #include <tuple>
 #include <cstring>
 using namespace std;
 
-int n, w, h, ans;
+int t, n, h, w, ans;
+int v[15][12];
 
-int v[15][12]{ 0 };
-int dr[4]{ -1,1,0,0 };
-int dc[4]{ 0,0,-1,1 };
-
-void boom(int map[15][12], int r, int c) {
+void boom(int map[15][12], int sr, int sc) {
 	queue<tuple<int, int, int>> q;
-
-	q.push({ r, c, map[r][c] });
-	map[r][c] = 0;
+	q.push({ sr,sc,map[sr][sc] - 1 });
+	map[sr][sc] = 0;
 
 	while (!q.empty()) {
 		int curR = get<0>(q.front());
@@ -24,17 +19,18 @@ void boom(int map[15][12], int r, int c) {
 		int curLen = get<2>(q.front());
 		q.pop();
 
-		for (int dir = 0; dir < 4; dir++) {
-			for (int len = 1; len < curLen; len++) {
-				int nr = curR + dr[dir] * len;
-				int nc = curC + dc[dir] * len;
+		for (int r = curR - curLen; r <= curR + curLen; r++) {
+			if (r < 0 || r >= h) continue;
 
-				if (nr < 0 || nc < 0 || nr >= h || nc >= w) continue;
-				if (map[nr][nc] == 0) continue;
+			if (map[r][curC] > 1) q.push({ r,curC,map[r][curC] - 1 });
+			map[r][curC] = 0;
+		}
 
-				if (map[nr][nc] > 1) q.push({ nr,nc,map[nr][nc] });
-				map[nr][nc] = 0;
-			}
+		for (int c = curC - curLen; c <= curC + curLen; c++) {
+			if (c < 0 || c >= w) continue;
+
+			if (map[curR][c] > 1) q.push({ curR,c,map[curR][c] - 1 });
+			map[curR][c] = 0;
 		}
 	}
 }
@@ -46,9 +42,7 @@ void gravity(int map[15][12]) {
 		for (int r = h - 1; r >= 0; r--) {
 			if (map[r][c] != 0) {
 				map[bottom][c] = map[r][c];
-
 				if (bottom != r) map[r][c] = 0;
-
 				bottom--;
 			}
 		}
@@ -66,7 +60,6 @@ int cntBlock(int map[15][12]) {
 }
 
 void dfs(int cnt, int map[15][12]) {
-
 	int remain = cntBlock(map);
 
 	if (remain == 0) {
@@ -78,9 +71,8 @@ void dfs(int cnt, int map[15][12]) {
 		ans = min(ans, remain);
 		return;
 	}
-	
+
 	for (int c = 0; c < w; c++) {
-		
 		int nextMap[15][12];
 		memcpy(nextMap, map, sizeof(nextMap));
 
@@ -105,10 +97,9 @@ void dfs(int cnt, int map[15][12]) {
 }
 
 int main() {
-	ios::sync_with_stdio(0);
+	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 
-	int t;
 	cin >> t;
 
 	for (int tc = 1; tc <= t; tc++) {
@@ -123,6 +114,4 @@ int main() {
 
 		cout << "#" << tc << " " << ans << "\n";
 	}
-
-	return 0;
 }
