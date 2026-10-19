@@ -8,12 +8,7 @@ struct People {
     int num, endTime, receptionNum, repairNum;
 };
 
-bool cmp(People p1, People p2) {
-    if (p1.endTime == p2.endTime) return p1.receptionNum < p2.receptionNum;
-    return p1.endTime < p2.endTime;
-}
-
-int n, m, k, a, b;
+int t, n, m, k, a, b;
 int reception[9]{ 0 };
 int repair[9]{ 0 };
 int receptionEnd[9]{ 0 };
@@ -23,14 +18,12 @@ int getReception(int arrive) {
     int idx = -1;
 
     for (int i = 0; i < n; i++) {
-        // 빈 창구
         if (receptionEnd[i] <= arrive) {
             idx = i;
             break;
         }
     }
 
-    // 빈 창구 없으면 가장 빨리 끝나는 창구
     if (idx == -1) {
         idx = 0;
 
@@ -45,7 +38,6 @@ int getReception(int arrive) {
 int getRepair(int arrive) {
     int idx = -1;
 
-    // 빈 창구
     for (int i = 0; i < m; i++) {
         if (repairEnd[i] <= arrive) {
             idx = i;
@@ -53,7 +45,6 @@ int getRepair(int arrive) {
         }
     }
 
-    // 빈 창구 없으면 가장 빨리 끝나는 창구
     if (idx == -1) {
         idx = 0;
 
@@ -69,7 +60,6 @@ int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    int t;
     cin >> t;
 
     for (int tc = 1; tc <= t; tc++) {
@@ -96,7 +86,10 @@ int main() {
             people.push_back({ i + 1, end, window + 1, 0 });
         }
 
-        sort(people.begin(), people.end(), cmp);
+        sort(people.begin(), people.end(), [&](People a, People b) {
+            if (a.endTime == b.endTime) return a.receptionNum < b.receptionNum;
+            return a.endTime < b.endTime;
+            });
 
         for (People& p : people) {
             int window = getRepair(p.endTime);
